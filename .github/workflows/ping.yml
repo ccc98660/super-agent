@@ -1,0 +1,22 @@
+name: ping-superagent
+on:
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Issue number to comment on
+        required: true
+      text:
+        description: Comment body
+        required: true
+permissions:
+  issues: write
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment on the issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE: ${{ inputs.issue }}
+          TEXT: ${{ inputs.text }}
+        run: gh api -X POST "repos/${{ github.repository }}/issues/$ISSUE/comments" -f body="$TEXT"
